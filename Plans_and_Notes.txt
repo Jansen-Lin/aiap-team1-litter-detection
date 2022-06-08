@@ -1,0 +1,38 @@
+2022-06-08 Wednesday
+
+## Plans
+- Idea generation
+- Create $10 images
+- Train model with the images
+  (as a proof of concept)
+- 
+- Discussion with mentor
+
+## Logs
+- Added ReadME and .gitignore
+- Idea generation for :
+  - $ notes detector in AISG office
+  - Detect thrash
+- Yong Quan creating images for $10 notes
+  - use labelImg
+  - took video of a $10 note
+  - take 50 frames from the video
+  - crop the $10 note out
+  - 
+
+2022-06-09 Thursday
+- 
+
+2022-06-10 Friday
+
+2022-06-11 Saturday
+
+2022-06-12 Sunday
+
+2022-06-13 Monday
+
+2022-06-14 Tuesday
+
+2022-06-15 Wednesday
+
+- Presentation!
