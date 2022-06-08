@@ -1,0 +1,48 @@
+2022-06-08 Wednesday
+
+## Plans
+- Idea generation
+- Detect Trash
+- Annotate images with $10 notes.
+  Train model with these images
+  (as a proof of concept)
+- Discussion with mentor
+- Using Taco Dataset for litter
+  detection
+
+## Activity logs
+- Added ReadME and .gitignore
+- Idea generation 
+  (only include those more fitting 
+   to the theme of helping AISG):
+  - litter detector
+    - using some existing classes in peekingduck,
+  	relabelling as litter class
+      (but this would be trivial)
+  - adding "currency notes" class to peeking duck model
+    for detection.
+- Yong Quan annotated images for $10 notes
+  - used labelImg
+  - took video of a $10 note
+  - take 50 frames from the video
+  - crop the $10 note out
+- Tried opening model in .pb format, failed...
+- Idea for dollar note & using peekingduck model scraped 
+- Proceed to use annotated TACO dataset for
+  training of model for litter prediction
+- 
+
+2022-06-09 Thursday
+- 
+
+2022-06-10 Friday
+
+2022-06-11 Saturday
+
+2022-06-12 Sunday
+
+2022-06-13 Monday
+
+2022-06-14 Tuesday
+
+- Presentation!
