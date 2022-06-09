@@ -16,7 +16,7 @@ from utils.torch_utils import select_device
 
 
 class Node(AbstractNode):
-    """Initializes YOLOv5n using trained weights to detect and predict 
+    """Initializes YOLOv5n using trained weights to detect and predict
     bounding boxes for objects in an image frame.
 
     Args:
@@ -63,7 +63,29 @@ class Node(AbstractNode):
         Returns:
             outputs (dict): Dictionary with keys "__".
         """
+        im = cv2.cvtColor(inputs["img"], cv2.COLOR_BGR2RGB)
+        im = cv2.resize(im, (640, 480))
+        im = torch.from_numpy(im).to(device)
+        im = im.half() if model.fp16 else im.float()
+        im /= 255
+        if len(im.shape) == 3:
+            im = im[None]
+        pred = model(im, augment=False, visualize=False)
+        pred = non_max_suppression(pred,
+                                       self.conf_thres,
+                                       self.iou_thres,
+                                       self.classes,
+                                       self.agnostic_nms,
+                                       max_det=self.max_det)
 
-        # result = do_something(inputs["in1"], inputs["in2"])
-        # outputs = {"out1": result}
-        # return outputs
+        # for i, det in enumerate(pred):
+        #     if len(det):
+        #         # Rescale boxes from img_size to im0 size
+        #         det[:, :4] = scale_coords(im.shape[2:], det[:, :4], im0.shape).round()
+
+        pred = pred[0].cpu().numpy()
+
+        return {
+            "bboxes": pred[:, :4],
+            "bbox_labels": [*map(class_labels.get, pred[:,5])]
+        }
