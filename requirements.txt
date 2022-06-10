@@ -1,6 +1,18 @@
-pandas
-seaborn
-peekingduck
-pytorch
-torchvision
-cudatoolkit=11.3
+# Usage: pip install -r requirements.txt --extra-index-url https://download.pytorch.org/whl/cu113
+
+click == 7.1.2
+colorama == 0.4.4
+matplotlib >= 3.2.2
+numpy >= 1.17.3
+opencv-contrib-python >= 4.5.2.54
+pandas >= 1.1.4
+peekingduck >= 1.2.0
+protobuf <= 3.20.1
+pyyaml >= 5.3
+requests == 2.24.0
+scipy >= 1.4.1
+seaborn >= 0.11.0
+tensorflow >= 2.2, < 2.8
+torch == 1.10.0
+torchvision == 0.11.1
+tqdm == 4.45.0
