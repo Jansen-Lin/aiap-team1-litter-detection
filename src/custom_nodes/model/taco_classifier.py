@@ -1,6 +1,8 @@
 """
 YOLOv5n Model for detecting litter (TACO Dataset)
 """
+import cv2
+import numpy as np
 import torch
 import torch.backends.cudnn as cudnn
 
@@ -9,6 +11,7 @@ from typing import Any, Dict
 from peekingduck.pipeline.nodes.node import AbstractNode
 
 from models.common import DetectMultiBackend
+from utils.augmentations import letterbox
 from utils.dataloaders import LoadImages
 from utils.general import check_img_size, non_max_suppression, scale_coords
 from utils.plots import Annotator, colors
@@ -22,18 +25,6 @@ class Node(AbstractNode):
     Args:
         config (:obj:`Dict[str, Any]` | :obj:`None`): Node configuration.
     """
-    class_labels = {0: "Aluminium Foil",
-                    1: "Bottle",
-                    2: "Bottle Cap",
-                    3: "Can",
-                    4: "Carton",
-                    5: "Cup",
-                    6: "Food Waste",
-                    7: "Other Plastic",
-                    8: "Paper Trash",
-                    9: "Plastic Trash",
-                    10: "Unlabeled Litter",
-                    11: "Cigarette"}
 
     def __init__(self, config: Dict[str, Any] = None, **kwargs: Any) -> None:
         # initialize/load any configs and models here
@@ -41,18 +32,13 @@ class Node(AbstractNode):
         # self.logger.info(f"model loaded with configs: config")
         super().__init__(config, node_path=__name__, **kwargs)
         self.device = select_device('0')
-        self.model = DetectMultiBackend("models/yolov5n_taco_best.pt", device=self.device)
+        self.model = DetectMultiBackend(self.weights_path, device=self.device)
         self.stride, self.names, self.pt = self.model.stride, self.model.names, self.model.pt
 
-        self.imgsz = check_img_size(640, s=self.stride)
-        self.conf_thres = 0.25
-        self.iou_thres = 0.45
+        self.imgsz = check_img_size(self.img_size, s=self.stride)
         self.classes = None
         self.agnostic_nms = False
-        self.max_det = 1000
-        self.line_thickness = 3
-        self.hide_labels = False
-        self.hide_conf = False
+        self.auto = True
 
     def run(self, inputs: Dict[str, Any]) -> Dict[str, Any]:  # type: ignore
         """This node does ___.
@@ -63,29 +49,44 @@ class Node(AbstractNode):
         Returns:
             outputs (dict): Dictionary with keys "__".
         """
-        im = cv2.cvtColor(inputs["img"], cv2.COLOR_BGR2RGB)
-        im = cv2.resize(im, (640, 480))
-        im = torch.from_numpy(im).to(device)
-        im = im.half() if model.fp16 else im.float()
+        bboxes = []
+        labels = []
+        scores = []
+
+        # Read image
+        im0 = inputs["img"]
+
+        # Padded resize
+        im = letterbox(im0, self.imgsz, stride=self.stride, auto=self.auto)[0]
+
+        # Convert
+        im = im.transpose((2, 0, 1))[::-1]  # HWC to CHW, BGR to RGB
+        im = np.ascontiguousarray(im)
+
+        im = torch.from_numpy(im).to(self.device)
+        im = im.half() if self.model.fp16 else im.float()
         im /= 255
         if len(im.shape) == 3:
             im = im[None]
-        pred = model(im, augment=False, visualize=False)
+        pred = self.model(im, augment=False, visualize=False)
         pred = non_max_suppression(pred,
-                                       self.conf_thres,
-                                       self.iou_thres,
-                                       self.classes,
-                                       self.agnostic_nms,
-                                       max_det=self.max_det)
+                                   self.conf_thres,
+                                   self.iou_thres,
+                                   self.classes,
+                                   self.agnostic_nms,
+                                   max_det=self.max_det)
 
-        # for i, det in enumerate(pred):
-        #     if len(det):
-        #         # Rescale boxes from img_size to im0 size
-        #         det[:, :4] = scale_coords(im.shape[2:], det[:, :4], im0.shape).round()
+        for i, det in enumerate(pred):
+            if len(det):
+                # Rescale boxes from img_size to im0 size
+                det[:, :4] = scale_coords(im.shape[2:], det[:, :4], im0.shape).round()
+                det = det.cpu().numpy()
+                # Normalize bboxes coordinates
+                det[:,[1, 3]] /= im0.shape[0]
+                det[:,[0, 2]] /= im0.shape[1]
+                bboxes = det[:, :4]
+                labels = [*map(self.class_label_map.get, det[:,5])]
+                scores = det[:,4]
 
-        pred = pred[0].cpu().numpy()
-
-        return {
-            "bboxes": pred[:, :4],
-            "bbox_labels": [*map(class_labels.get, pred[:,5])]
-        }
+        outputs = {"bboxes": bboxes, "bbox_labels": labels, "bbox_scores": scores}
+        return outputs

@@ -4,4 +4,5 @@ nodes:
 - custom_nodes.model.taco_classifier
 - draw.bbox:
     show_labels: True
+- custom_nodes.draw.score   
 - output.screen

@@ -1,0 +1,6 @@
+pandas
+seaborn
+peekingduck
+pytorch
+torchvision
+cudatoolkit=11.3

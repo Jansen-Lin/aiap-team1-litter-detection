@@ -3,9 +3,13 @@
 # other data types as required. List of built-in data types for PeekingDuck can
 # be found at https://peekingduck.readthedocs.io/en/stable/glossary.html.
 input: ["img"]
-output: ["bboxes", "bbox_labels"]
+output: ["bboxes", "bbox_labels", "bbox_scores"]
 
-weights_parent_dir: model/best.pt
+img_size: 640
+conf_thres: 0.5
+iou_thres: 0.5
+max_det: 1000 # Maximum Detections Per Image
+weights_path: model/yolov5n_taco_best.pt
 class_label_map: {
     0: "Aluminium Foil",
     1: "Bottle",
