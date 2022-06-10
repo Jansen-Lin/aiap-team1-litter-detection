@@ -2,7 +2,11 @@ nodes:
 - input.visual:
     source: 0
 - custom_nodes.model.taco_classifier
+- dabble.fps
+- dabble.bbox_count
 - draw.bbox:
     show_labels: True
+- draw.legend:
+    show: ["fps", "count"]
 - custom_nodes.draw.score   
 - output.screen

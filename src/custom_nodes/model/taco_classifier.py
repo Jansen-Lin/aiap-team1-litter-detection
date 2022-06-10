@@ -49,9 +49,9 @@ class Node(AbstractNode):
         Returns:
             outputs (dict): Dictionary with keys "__".
         """
-        bboxes = []
-        labels = []
-        scores = []
+        bboxes = np.empty([0,4])
+        labels = np.empty([0])
+        scores = np.empty([0,4])
 
         # Read image
         im0 = inputs["img"]
@@ -85,7 +85,7 @@ class Node(AbstractNode):
                 det[:,[1, 3]] /= im0.shape[0]
                 det[:,[0, 2]] /= im0.shape[1]
                 bboxes = det[:, :4]
-                labels = [*map(self.class_label_map.get, det[:,5])]
+                labels = np.array([*map(self.class_label_map.get, det[:,5])])
                 scores = det[:,4]
 
         outputs = {"bboxes": bboxes, "bbox_labels": labels, "bbox_scores": scores}
