@@ -1,12 +1,23 @@
 nodes:
 - input.visual:
     source: 0
+#    source: "test_imgs/test_img.jpg"
+
 - custom_nodes.model.taco_classifier
 - dabble.fps
 - dabble.bbox_count
+
 - draw.bbox:
     show_labels: True
 - draw.legend:
     show: ["fps", "count"]
+
 - custom_nodes.draw.score   
+
 - output.screen
+- output.media_writer:
+    output_dir: processed
+- output.csv_writer:
+    stats_to_track: [  "bboxes", "bbox_labels", "bbox_scores"]
+    file_path: processed/demo.csv
+    logging_interval: 1
