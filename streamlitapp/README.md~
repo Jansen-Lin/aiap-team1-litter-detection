@@ -9,4 +9,5 @@ Steps
 3. pip install -r requirements_streamlitapp.txt
 4. To run the app at the console/cmdline type : streamlit run src/app.py
 
+
                             ++END++
