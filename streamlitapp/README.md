@@ -7,7 +7,7 @@ Steps
 1. conda create -n streamlitapp python=3.8 
 2. conda activate streamlitapp
 3. pip install -r requirements_streamlitapp.txt
-streamlit run app.py
+streamlit run src/app.py
 
 
 
