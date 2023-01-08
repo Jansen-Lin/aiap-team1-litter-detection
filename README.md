@@ -9,8 +9,8 @@ The model is trained using the open-source [YOLOv5](https://github.com/ultralyti
 
 # Training Metrics
 ![Metrics](./metrics/metrics.JPG)
-![Metrics](./metrics/train_loss.PNG)
-![Metrics](./metrics/val_loss.PNG)
+![Metrics](./metrics/train-loss.png)
+![Metrics](./metrics/val-loss.png)
 
 Installation
 ------------
