@@ -23,7 +23,7 @@ The objection detection model is trained using the open-source [YOLOv5](https://
 ![val-loss](https://user-images.githubusercontent.com/93126390/211184439-9c5c17e9-a77d-48f4-9030-a4e1127e827b.png)
 
 
-# Setting up the environment
+## Setting up the environment
 
 To create a new conda environment & activate it:
 
@@ -43,7 +43,7 @@ To install PyTorch for __other OS users__ (not tested): <br>
 - Refer to https://pytorch.org/ for the respective command to install PyTorch.
 
 
-# Running the litter detection engine
+## Running the litter detection engine
 
 Ensure you have a webcam connected to your computer.
 
